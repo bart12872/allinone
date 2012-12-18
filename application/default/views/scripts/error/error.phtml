@@ -1,0 +1,41 @@
+<?php echo $this->doctype();?>
+<html>
+<head>
+<?php 
+	// recuperationd e la connexion
+	$db = getconnection();
+        	
+	// meta
+   	echo $this->headLink()	->appendStylesheet('/static/css/front-theme/jquery-ui-1.9.2.custom.css')
+							->appendStylesheet('/css/sea.css');	
+?>
+
+</head>
+<body>
+  <div class='ui-widget'>
+  	<div style='font-size:2em;'class='ui-widget-header ui-corner-top padding'><?php echo $this->message ?></div>
+  	<div style='padding:10px;' class='ui-widget-content'>
+	  	<?php if (isset($this->exception)): ?>
+		
+	  	<p style='padding:10px;' class='ui-state-error ui-corner-all'><b>Message:</b> <?php echo $this->exception->getMessage() ?></p>
+	  	<?php echo $this->trace;?>
+	  	
+	  	<div style='margin: 10px 0px;'>
+		  	<div class='fLeft' style='margin-left: 10px'>
+			  	<b>Paramètres :</b><br/>
+			  	<pre><?php echo var_export($this->request->getParams(), true) ?></pre>
+		  	</div>
+		  	<div class='cBoth'></div>
+	  	</div>
+	  	<?php endif ?>
+  	</div>
+  	<div class='ui-widget-header ui-corner-bottom padding'><i>Route :</i> <?php echo Zend_Controller_Front::getInstance()->getRouter()->getCurrentRouteName(); ?></div>
+  </div>
+ <?php 
+ echo $this->jQuery()->addOnLoad('$("body").initialize();');
+ echo $this->headScript()->appendFile($this->baseUrl('js/jquery.other.js'))
+							->appendFile($this->baseUrl('js/jquery.dataTables.min.js'))
+							->appendFile($this->baseUrl('js/jquery.dataTables.more.js'));
+ ?>
+</body>
+</html>

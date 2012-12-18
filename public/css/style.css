@@ -1,0 +1,58 @@
+/**
+ * Base Styles
+ */
+body {
+	background:#efefef;
+  	font: normal normal normal 12px/160% 'segoe ui,Arial,sans-serif';
+	width:1200px;
+	margin:auto;
+}
+/**
+ * Text Styles
+ */
+a {
+  outline: none;
+  text-decoration: none;
+}
+
+h2 {
+	font-size:1.8em;
+	margin:10px 2px 5px 2px;
+}
+
+h3 {
+	font-size:1.3em;
+	margin:10px 2px 5px 2px;
+}
+
+
+h4 {
+	font-size:1.2em;
+	margin:10px 2px 5px 2px;
+}
+
+body > header {
+	position:fixed;
+	top:0px;
+	width:1200px;
+}
+
+body > aside {
+	position:fixed;
+	width:200px;
+	float:left;
+}
+
+body > section.content  {
+	margin-left:205px;
+	margin-top:40px;
+	width:995px;
+	min-height:800px;
+}
+
+body > section.content > h2 {
+	margin-bottom:10px;
+}
+
+.ui-menu {z-index:999 !important;}
+.ui-menu > li > ul {width:150px;}

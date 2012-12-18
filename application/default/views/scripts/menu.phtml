@@ -1,0 +1,14 @@
+<ul class='navigation'>
+	<?php foreach ($this->container as $page) : ?>
+	 	<li>
+	 		<a href="<?php echo $page->getHref();?>" ><?php echo $page->getLabel(); ?></a>
+	 		<?php if ($page->hasPages()) : ?>
+	 		<ul>
+	 		<?php foreach ($page->getPages() as $p) : ?>
+	 				<li><a href='<?php echo $p->getHref();?>'><?php echo $p->getLabel();?></a></li>
+			<?php endforeach;?>
+			</ul>
+			<?php endif; ?>
+	 	</li>
+	 <?php endforeach;?>
+</ul>

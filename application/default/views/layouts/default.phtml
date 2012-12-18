@@ -1,0 +1,32 @@
+<?php echo $this->doctype() ?>
+<html lang="fr">
+<head>
+<?php
+$this->headLink()->appendStylesheet($this->baseUrl('css/style.css'))
+				 ->appendStylesheet($this->baseUrl('css/forms.css'))
+                 ->appendStylesheet($this->baseUrl('css/jquery.ui.datatables.css'))
+                 ->appendStylesheet($this->baseUrl('css/sea.css'));
+
+$this->headScript();
+
+// affichage des js et css
+echo $this->jQuery()->addOnLoad("\$('body').initialize();")->addOnLoad('$(".navigation").menu({ position: { my: "left top", at: "right+6 top-0" } });');	
+
+echo $this->headMeta();
+echo $this->headTitle('Allinone');
+echo $this->headLink();
+echo $this->headScript();
+
+?>
+</head>
+<body>
+	
+	<div id="ajax-loading" class="ui-widget-content ui-corner-all"><img src="/images/ajax-loader.gif"/></div>
+	<header class='ui-widget-header ui-corner-bottom padding'>Allinone</header>
+	<div class='both' ></div>
+	<aside><?php echo $this->navigation()->menu()->renderPartial(new Zend_Navigation(getregistry(false, 'navigation')->toArray()), 'menu.phtml'); ?></aside>
+	<section class="ui-corner-all content ui-widget-content padding">
+		<?php echo $this->layout()->content; ?>
+	</section>
+</body>
+</html>

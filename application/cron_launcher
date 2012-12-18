@@ -1,0 +1,23 @@
+#!/usr/bin/php
+<?php 
+/**
+ * Bootstrap Cron avec Zend
+ */
+ 
+ error_reporting(E_ALL & ~E_NOTICE);
+ ini_set('display_errors', 1);
+
+// on passe en mode debug
+define('DEBUG_MODE', true);
+
+// chargement des function de bases
+require_once __DIR__ . '/../library/function.php';
+
+// on test que l'application sest lancé depuis la ligne de commande
+if(!is_cron()) {unset($_SESSION);throw new Exception('Only available from php-cli');}
+
+// on charge la librairie de gestion des arguments
+require_once __DIR__ . '/../library/CronLaucher.php';
+try {CronLaucher::getInstance();} catch (Zend_Console_Getopt_Exception $e) {echo 'ERREUR : ' . $e->getMessage();}
+
+include __DIR__ . '/../public/index.php';// on lance le mvc

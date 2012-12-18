@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+/**
+ * mes classe raccourcie
+ *
+ */
+.right {float:right}
+.left{float:left}
+
+.al{text-align:left}
+.ar{text-align:right}
+.ac{text-align:center}
+.padding {padding:.4em 1em;}
+.margin {margin: .4em 1em;}
+
+.both{clear:both}
+
+div#ajax-loading {padding:10px;position:fixed;right:2px;top:2px;z-index: 999999999999 !important;}
