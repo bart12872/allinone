@@ -179,7 +179,10 @@ class SeaX_JQuery_Datatable extends Sea_Datagrid_Html {
 			$language = $this->getJqueryParam('oLanguage');
 			$language['sEmptyTable'] = $this->getNoResults();
 			$this->setJqueryParam('oLanguage',  $language);
-			$this->setJqueryParam('fnServerParams' , new Zend_Json_Expr(sprintf('function ( aoData ) {aoData.push( { "name": "sToken", "value": "%s" } );}', $this->_token)));
+			
+			if (!$this->getJqueryParam('fnServerParams')) {
+				$this->setJqueryParam('fnServerParams' , new Zend_Json_Expr(sprintf('function ( aoData ) {aoData.push( { "name": "sToken", "value": "%s" } );}', $this->_token)));
+			}
 		}
 		
 		// formatage spécifique du tableau

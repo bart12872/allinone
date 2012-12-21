@@ -10,6 +10,26 @@ jQuery.fn.center = function () {
 };
 
 /**
+ * register global variable
+ * 
+ * @returns
+ */
+function glob(name, value) {
+	
+	// on test que name est correct
+	if ((typeof name) != 'string') {return false;}
+
+	// cas du getter
+	if (value == undefined) {
+		// si la variable existe on la renvoie
+		eval("if ((typeof window." + name + ") != undefined) {data = window." + name + ";}");
+		return data;
+	// cas du setter
+	} else {eval("window." + name + ' = value;');}
+	
+}
+
+/**
  * 
  * Remplie un select a partir d'un requete json
  * 

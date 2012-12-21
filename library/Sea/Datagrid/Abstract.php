@@ -176,6 +176,7 @@ class Sea_Datagrid_Abstract extends Zend_Paginator {
 	 * 
 	 * @param unknown_type $name
 	 * @param unknown_type $arguments
+	 * @return Sea_Datagrid_Column
 	 */
 	public function __call($name, $arguments) {
         

@@ -145,6 +145,100 @@ class BinsearchController extends \Sea_Controller_Action {
 	public function regexAction() {
 		$this->__('list',new  Default_Datagrid_BinsearchRegex);
 	}
+	
+	/**
+	 * edition d'une regex
+	 */
+	public function editerregexAction() {
+		$validator = ['id' => [['Db_RecordExists', 'binsearch_regex', 'binsearch_regex_id']]];
+    	$input = new Zend_Filter_Input([], $validator, $this->getRequest()->getParams());
+    	if (!$input->isValid()) {throw new Sea_Exception('Erreur sur les paramètres');}
+		
+		$db = getconnection();// récupération de la connexion
+        
+        // création du formulaire
+       	$form = new Application_Model_FormAjax();
+       	$form->setAction($this->view->url());
+       	$form->addSelect('binsearch_group_id', 'Groupe', $db->fetchPairs($db->select()->from('binsearch_group')->order('binsearch_group_label')), true);
+       	$form->addText('pattern', 'Regexp', true)->setAttrib('size', '80');
+       	$form->addSelect('rank', 'Rang', array_fill_all(range(0, 9)), true);
+       	$form->addText('min_size', 'Ko Min.', true)->addValidator('GreaterThan', true, getregistry('collection.size.min', 'binsearch'));
+       	$form->addContent(new Default_Datagrid_BinsearchRegexTest);
+		$form->addSubmit('save', 'Enregistrer');
+		
+		// table de gestion des enrtrée
+		$table = new Application_Model_DbTable_BinsearchRegex();
+		
+       	// initialisation de la liste
+       	$list = false;
+       	
+       	if ($this->getRequest()->isPost()) { // si un formulaire est posté ($_POST)
+       		if($form->isValid($this->getRequest()->getPost())) {// on verifie que le formulaire est correct
+       		
+       			$data = $form->getValues();// recuperation des valeur du formulaire
+       			$db = getconnection();// récupération de la connexion
+       			
+       			try { // traitement
+					       				
+       				$data = $table->assoc($data);
+       				
+       			    // cas de l'insertion
+       			    if (empty($input->id)) {$table->insert($data);} 
+       			    
+       			    // cas de la mise a jour
+       			    else {$table->update($data, $db->quoteInto('binsearch_regex_id=?', $input->id));}
+       			
+       				$db->commit();// on valide la transaction
+       				$this->view->JQuery()->addOnload("refreshDataTable();");
+       				$this->_simpleNoLayout($this->view->partial('success.phtml'));
+       			} catch (Exception $e) { // cas d'une erreur
+       				$db->rollBack();//on annule la transaction
+       				$this->_simpleNoLayout($this->view->partial('error.phtml', ['m' => $e->getMessage()]));
+       			}     		
+       			return;
+       		}
+       	
+       	// case de l'edition d'une entrée existante
+       	} elseif($id = $this->getRequest()->getParam('id', false)) {
+			$default = $table->find($id);  
+			if ($default->valid()){$form->populate($default->current()->toArray());}// on charge les données
+       	
+       	// cas de l'insertion
+       	} else {$form->populate(array('pattern' => '(?<name>.*)'));}
+       	
+       	// attribution du formulaire a la vue
+       	$this->_simpleNoLayout($form);
+	}
+	
+	/**
+	 * liste les collection matcher par une regex
+	 */
+	public function effacerregexAction() {
+		// validation des paramètres
+    	$validator = ['id' => ['presence' => 'required', ['Db_RecordExists', 'binsearch_regex', 'binsearch_regex_id']]];
+    	$input = new Zend_Filter_Input([], $validator, $this->getRequest()->getParams());
+    	if (!$input->isValid()) {throw new Sea_Exception('Erreur sur les paramètres');}
+    	
+    	$db = getconnection();// récupération de la connexion
+		$db->beginTransaction();
+        
+        try {
+        	 // recuperation de la table
+        	$table = new Application_Model_DbTable_BinsearchRegex();
+        
+	        // mise a jour
+	        $table->delete($table->getAdapter()->quoteInto('binsearch_regex_id=?', $input->id));
+			$db->commit();
+	        $this->view->JQuery()->addOnload("refreshDataTable();");
+        	$this->_simpleNoLayout($this->view->partial('success.phtml'));
+		// enc as d'erreur on annules changement
+		} catch (Exception $e) {
+			$db->rollBack();
+			$this->_simpleNoLayout($this->view->partial('error.phtml', ['m' => $e->getMessage()]));
+		}
+		return;
+		
+	}
 }
 
 ?>
