@@ -11,5 +11,7 @@ class Application_Model_DbTable_BinsearchCollection extends Sea_Db_Table {
 	            'refColumns'        => 'binsearch_group_id'
 			)
 	);
+    
+    protected $_dependentTables = array('BinsearchMatch' => 'Application_Model_DbTable_BinsearchMatch');
 }
 ?>

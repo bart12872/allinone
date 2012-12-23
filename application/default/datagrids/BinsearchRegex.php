@@ -16,7 +16,11 @@ public function init() {
 		$select = $db->select()->from('binsearch_group', array('binsearch_group_id', 'short_title'))->order('short_title');	
         $this->addText('Groupe', 'short_title')->width('100px')->align('center')->setStrainerSelect(array('-- Choisissez --') + $db->fetchPairs($select));
         $this->addText('Rang', 'rank')->width('15px')->align('center');
-		$this->addMulti('Action') ->add($this->column(	'IconeUi', 'Editer', 'ui-icon-pencil', 
+		$this->addMulti('Action')  ->add($this->column('IconeUi', 'Chercher', 'ui-icon-search', 
+                                  						$this->getView()->url(['controller' => 'binsearch', 'action' => 'chercher', 'id' => '%d'], 'default', true, false) , 
+                                  						'binsearch_regex_id',
+                                  						['class' => 'dialog-ajax']))
+                                  ->add($this->column(	'IconeUi', 'Editer', 'ui-icon-pencil', 
 														$this->getView()->url(['controller' => 'binsearch', 'action' => 'editerregex', 'id' => '%d'], 'default', true, false), 
 														'binsearch_regex_id', 
 														['class' => 'dialog-ajax', 'data-dialog-width' => 1200]))
@@ -29,6 +33,7 @@ public function init() {
 		
 		$tt = $this->createExtra('Tabletools');
 		$tt->addButton('Ajouter', sprintf('dialogurl("%s", null, "Ajouter", 1200)' ,$this->getView()->url(['controller' => 'binsearch', 'action' => 'editerregex'], 'default', true, false)));
+		$tt->addButton('Chercher', sprintf('dialogurl("%s", null, "Chercher")' ,$this->getView()->url(['controller' => 'binsearch', 'action' => 'chercher'], 'default', true, false)));
 		$this->addExtra($tt);
 		
 		//FILTRE

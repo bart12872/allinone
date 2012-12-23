@@ -237,7 +237,65 @@ class BinsearchController extends \Sea_Controller_Action {
 			$this->_simpleNoLayout($this->view->partial('error.phtml', ['m' => $e->getMessage()]));
 		}
 		return;
+	}
+	
+	
+	/**
+	 * liste les collection matché
+	 */
+	public function matchAction() {
+		$this->__('list', new Default_Datagrid_BinsearchMatch);
+	}
+	
+	/**
+	 * recherche les collection a aprtir des regex
+	 * 
+	 */
+	public function chercherAction() {
 		
+		$validator = ['id' => [['Db_RecordExists', 'binsearch_regex', 'binsearch_regex_id']]];
+    	$input = new Zend_Filter_Input([], $validator, $this->getRequest()->getParams());
+    	if (!$input->isValid()) {throw new Sea_Exception('Erreur sur les paramètres');}
+		$db = getconnection();// récupération de la connexion
+		
+		$select = $db	->select()
+						->from('binsearch_regex')
+						->order(['binsearch_regex.binsearch_group_id','rank']);
+    	if ($input->id) {$select->where('binsearch_regex_id = ?', $input->id);}
+    	
+    	$table = new Application_Model_DbTable_BinsearchMatch;// recuperation de la table
+		$error = '';
+		foreach($db->fetchAll($select) as $regex) {
+			
+	    	// on selectionne tout les collection qui n'ont pas de release
+	    	$select = $db	->select()
+	    					->from(array('c' => 'binsearch_collection'), ['binsearch_collection_id', 'title', 'size'])
+	    					->joinLeft(array('m' => 'binsearch_match'), 'c.binsearch_collection_id=m.binsearch_collection_id', '')
+	    					->where('binsearch_group_id=?', $regex['binsearch_group_id'])
+	    					->where('size >= ?', $regex['min_size'])
+	    					->where('c.inserted >= DATE_SUB(NOW(), INTERVAL 1 MONTH)') // traitement que pour un mois
+	    					->where('m.binsearch_collection_id IS NULL');
+	    	
+	    	foreach( $db->fetchAll($select) as $row) {
+	    		
+	    	    // si la regecx ne match pas, on ne retiens pas
+			    if (!preg_match(sprintf('#^%s$#i', $regex['pattern']), $row['title'], $matches)){continue;}
+			    
+			    $insert = [	'binsearch_collection_id' => $row['binsearch_collection_id'],
+			    			'binsearch_regex_id' => $regex['binsearch_regex_id'],
+			    			'name' => $matches['name'],
+			    			'season' => $matches['season'],
+			    			'episode' => $matches['episode']];
+			    
+			    // on tente l'inserttion
+			    try {$table->insert($insert);} catch(Exception $e) {$error .= $e->getMessage() . '<br/>';} 
+	    	}
+		}  
+		
+		if (empty($error)) {
+			$this->view->JQuery()->addOnload("refreshDataTable();");
+			$this->_simpleNoLayout($this->view->partial('success.phtml'));
+		} else {$this->_simpleNoLayout($this->view->partial('error.phtml', ['m' => $error]));}
 	}
 }
 
