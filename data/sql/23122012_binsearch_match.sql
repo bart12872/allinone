@@ -20,3 +20,5 @@ ALTER TABLE  `binsearch_match` ADD FOREIGN KEY (  `binsearch_regex_id` ) REFEREN
 ALTER TABLE  `binsearch_regex` CHANGE  `update`  `updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE  `binsearch_regex` ADD  `active` BOOLEAN NOT NULL DEFAULT  '1' AFTER  `min_size`;
 ALTER TABLE  `binsearch_collection` CHANGE  `insert`  `inserted` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE  `binsearch_match` CHANGE  `name`  `name` VARCHAR( 256 ) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL;

@@ -40,36 +40,28 @@ class BinsearchController extends \Sea_Controller_Action {
 	        // recuperation de la gestion de la table
 	        $table = new Application_Model_DbTable_BinsearchGroup();
 	        
-	        // on regarde s'il s'agit d'un chargement du formulaire
-	        if (!$this->getRequest()->getParam('save', false) && ($id = $this->getRequest()->getParam('id', false))) {
-	            $default = $table->find($id);
-	            if ($default->valid()){$form->populate($default->current()->toArray());}// on charge les données
-	        
-	        // sinon on traite le formulaire
-	        } else {
-		    	if($form->isValid($this->getRequest()->getPost())) {// on verifie que le formulaire est correct
-		    	
-		    		$data = $form->getValues();// recuperation des valeur du formulaire
-		    		$db = getconnection();// récupération de la connexion
-		    		$db->beginTransaction();// on demarre la transaction
-		    
-		    		try { // traitement
-		    		    
-		    		    // mise a jour de l'enregistrement
-		    		    if (empty($input->id)) {$table->insert($data);}
-		    		    else {$table->update($data, $table->getAdapter()->quoteInto('binsearch_group_id=?', $input->id));}
-		    		    
-		    			$db->commit();// on valide la transaction
-						$this->view->JQuery()->addOnload("refreshDataTable();");
-		    			$this->_simpleNoLayout($this->view->partial('success.phtml'));
-						
-				    // enc as d'erreur on annules changement
-					} catch (Exception $e) {
-						$db->rollBack();
-						$this->_simpleNoLayout($this->view->partial('error.phtml', ['m' => $e->getMessage()]));
-					}
-					return;
-		    	}
+	    	if($form->isValid($this->getRequest()->getPost())) {// on verifie que le formulaire est correct
+	    	
+	    		$data = $form->getValues();// recuperation des valeur du formulaire
+	    		$db = getconnection();// récupération de la connexion
+	    		$db->beginTransaction();// on demarre la transaction
+	    
+	    		try { // traitement
+	    		    
+	    		    // mise a jour de l'enregistrement
+	    		    if (empty($input->id)) {$table->insert($data);}
+	    		    else {$table->update($data, $table->getAdapter()->quoteInto('binsearch_group_id=?', $input->id));}
+	    		    
+	    			$db->commit();// on valide la transaction
+					$this->view->JQuery()->addOnload("refreshDataTable();");
+	    			$this->_simpleNoLayout($this->view->partial('success.phtml'));
+					
+			    // enc as d'erreur on annules changement
+				} catch (Exception $e) {
+					$db->rollBack();
+					$this->_simpleNoLayout($this->view->partial('error.phtml', ['m' => $e->getMessage()]));
+				}
+				return;
 	        }
 	    } elseif($input->id) {
 	    	$mapper = new Sea_Mapper('Application_Model_DbTable_BinsearchGroup');
@@ -123,8 +115,9 @@ class BinsearchController extends \Sea_Controller_Action {
 		
 		// Chargement de la gestion des rss binsearch
     	$binsearch = new Application_Model_Binsearch();
-    	$select = $db->select()->from('binsearch_group')->where('active = ?', 1);
+    	$select = $db->select()->from('binsearch_group');
     	if ($input->id) {$select->where('binsearch_group_id = ?', $input->id);}
+    	else{$select->where('active = ?', 1);}
     	
     	$error = '';
 		foreach($db->fetchAll($select) as $row) {

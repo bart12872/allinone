@@ -93,6 +93,8 @@ class Application_Model_Binsearch {
      * @param unknown_type $id
      */
     public function importCollection($id) {
+    	
+    	$db = getconnection();// récupération de la connexion
         
         // recuperation de la table de gestion
         $table = new Application_Model_DbTable_BinsearchCollection();
@@ -108,6 +110,9 @@ class Application_Model_Binsearch {
             $row = $table->assoc($row);
             $table->insert($row);
         }
+        
+        // mise a jour de kla date du denrie refresh
+		$db->update('binsearch_group', ['refreshed'=> new Zend_Db_Expr('NOW()')], $db->quoteInto('binsearch_group_id=?', $id));
         
         return $this;// on renvoie l'objet courant
     }
