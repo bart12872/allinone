@@ -18,7 +18,9 @@ class Default_Datagrid_BinsearchGroup extends \Application_Model_Datatable {
 		$this->addText('Diminutif', 'short_title')->align('center');
         $this->addText('Limite Rss', 'rss')->align('center');
         $this->addText('Collection', 'c')->align('center');
-		$this->addMulti('Action') ->add($this->column('IconeUi', 'Raffraichir', 'ui-icon-arrowrefresh-1-e', $this->getView()->url(['controller' => 'binsearch', 'action' => 'charger', 'id' => '%d'], null, true, false), 'binsearch_group_id', ['class' => 'dialog-ajax']))
+        $this->addBoolean('?', 'active')->align('center');
+		$this->addText('Raffraichi', 'refreshed')->align('center');
+		$this->addMulti('Action') ->add($this->column('IconeUi', 'Raffraichir', 'ui-icon-refresh', $this->getView()->url(['controller' => 'binsearch', 'action' => 'charger', 'id' => '%d'], null, true, false), 'binsearch_group_id', ['class' => 'dialog-ajax']))
                                   ->add($this->column('IconeUi', 'Editer', 'ui-icon-pencil', $this->getView()->url(['controller' => 'binsearch', 'action' => 'editergroupe', 'id' => '%d'], null, true, false), 'binsearch_group_id', ['class' => 'dialog-ajax', 'data-dialog-width' => 800]))
                                   ->add($this->column('IconeUi', 'Supprimer', 'ui-icon-closethick', $this->getView()->url(['controller' => 'binsearch', 'action' => 'effacergroupe', 'id' => '%d'], null, true, false), 'binsearch_group_id', ['class' => 'dialog-ajax']))
                                   ->align('center')->width('120px');

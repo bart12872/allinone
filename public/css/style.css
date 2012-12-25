@@ -35,12 +35,14 @@ body > header {
 	position:fixed;
 	top:0px;
 	width:1200px;
+	z-index: 999 !important;
 }
 
 body > aside {
 	position:fixed;
 	width:200px;
 	float:left;
+	z-index: 999 !important;
 }
 
 body > section.content  {

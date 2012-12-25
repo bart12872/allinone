@@ -29,6 +29,8 @@ class SeaX_JQuery_View_Helper_Datatable extends ZendX_JQuery_View_Helper_UiWidge
         	$more
         );
         
+        if ($name) {$js = sprintf('%s = %s;glob("%1$s", %1$s);', $name, $js);}
+        
         // inscriptoin sur le onload
         $this->jquery->addOnLoad($js);
         

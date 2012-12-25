@@ -23,7 +23,7 @@ echo $this->headScript();
 	
 	<div id="ajax-loading" class="ui-widget-content ui-corner-all"><img src="/images/ajax-loader.gif"/></div>
 	<header class='ui-widget-header ui-corner-bottom padding'>Allinone</header>
-	<div class='both' ></div>
+	<div class='both'></div>
 	<aside><?php echo $this->navigation()->menu()->renderPartial(new Zend_Navigation(getregistry(false, 'navigation')->toArray()), 'menu.phtml'); ?></aside>
 	<section class="ui-corner-all content ui-widget-content padding">
 		<?php echo $this->layout()->content; ?>

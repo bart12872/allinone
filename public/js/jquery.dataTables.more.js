@@ -124,4 +124,4 @@ jQuery.fn.dataTableExt.oApi.fnFilterOnReturn = function (oSettings) {
  */
 var dataTableStack  = new Array();
 function refreshDataTable() {console.log('ICI');for (i=0;i<dataTableStack.length;i++){console.log(dataTableStack[i]);dataTableStack[i].fnDraw();}}
-jQuery.fn.dataTableExt.oApi.fnInsertStack = function () {dataTableStack[dataTableStack.length] = this;};
+jQuery.fn.dataTableExt.oApi.fnInsertStack = function () {dataTableStack[dataTableStack.length] = this;return this;};
